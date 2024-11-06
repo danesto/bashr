@@ -7,8 +7,8 @@ import Link from "next/link";
 export default async function Dashboard() {
   return (
     <div className="grid grid-rows-12 gap-0 dark gap-y-4 pl-10">
-      <h2 className="text-stone-100 row-span-2 text-base font-semibold">
-        most recent bashes
+      <h2 className="dark:text-stone-100 row-span-2 text-lg font-semibold">
+        Most Recent Bashes
       </h2>
 
       <div className="row-span-10 grid grid-cols-4 items-baseline gap-x-4">
