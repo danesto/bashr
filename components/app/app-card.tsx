@@ -38,8 +38,8 @@ const AppCard = ({
           {createdAt}
         </CardDescription>
       </CardContent>
-      <CardFooter>
-        <Button asChild>
+      <CardFooter className="justify-end">
+        <Button asChild className="w-full">
           <Link href={href}>View</Link>
         </Button>
       </CardFooter>

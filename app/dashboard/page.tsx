@@ -11,7 +11,13 @@ export default async function Dashboard() {
         most recent bashes
       </h2>
 
-      <div className="row-span-10 grid grid-cols-5 items-baseline gap-x-4">
+      <div className="row-span-10 grid grid-cols-4 items-baseline gap-x-4">
+        <AppCard
+          title="New Release 2.0"
+          description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure, dolores!"
+          createdAt="23.09"
+          href="/dashbor"
+        />
         <AppCard
           title="New Release 2.0"
           description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure, dolores!"
