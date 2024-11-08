@@ -9,7 +9,29 @@ export default function Bush({ params }: { params: Record<string, string> }) {
 
       <div className="row-span-10 grid grid-cols-3 items-baseline gap-x-4 dark:text-stone-100">
         {/* <h3 className="col-span-4 text-base font-semibold">test cases</h3> */}
-        <TestCases />
+
+        <TestCases
+          testCases={[
+            {
+              name: "Submiting a form",
+              participants: [],
+              description: "In this scenario we are testing form submission.",
+              id: 1,
+            },
+            {
+              name: "Get all names after search",
+              participants: [],
+              id: 2,
+              description: "",
+            },
+            {
+              name: "Some test case no. 3",
+              participants: [],
+              id: 3,
+              description: "",
+            },
+          ]}
+        />
       </div>
     </div>
   );
