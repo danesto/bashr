@@ -1,0 +1,16 @@
+import { TestCases } from "@/components/app/test-cases/test-cases";
+
+export default function Bush({ params }: { params: Record<string, string> }) {
+  return (
+    <div className="grid grid-rows-12 gap-0 dark gap-y-4 pl-10">
+      <h2 className="dark:text-stone-100 row-span-2 text-lg font-semibold">
+        slug: {params.slug}
+      </h2>
+
+      <div className="row-span-10 grid grid-cols-3 items-baseline gap-x-4 dark:text-stone-100">
+        {/* <h3 className="col-span-4 text-base font-semibold">test cases</h3> */}
+        <TestCases />
+      </div>
+    </div>
+  );
+}

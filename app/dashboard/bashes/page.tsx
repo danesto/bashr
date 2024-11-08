@@ -7,7 +7,19 @@ export default async function Bashes() {
         <h2 className="text-lg font-semibold">My Bashes</h2>
       </div>
       <div className="row-span-12">
-        <BashesTable />
+        <BashesTable
+          data={[
+            {
+              id: "728ed52f",
+              description: "Lorem ipsum dolor sit amet elit...",
+              status: "pending",
+              title: "New Release 2.0",
+              participants: 4,
+              createdAt: "23.09",
+              testCases: 20,
+            },
+          ]}
+        />
       </div>
     </div>
   );
