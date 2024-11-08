@@ -1,5 +1,7 @@
 import { TestCases } from "@/components/app/test-cases/test-cases";
 
+// this is a page for customizing and editing bash; adding test case scenarios, etc.
+//todo: add new page where bug bash is going to be conducted between teams using web sockets - but try to reuse same components if not possible then create new ones
 export default function Bush({ params }: { params: Record<string, string> }) {
   return (
     <div className="grid grid-rows-12 gap-0 dark gap-y-4 pl-10">
