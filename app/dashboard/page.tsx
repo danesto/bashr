@@ -1,11 +1,17 @@
 import { AppCard } from "@/components/app/app-card";
 import { StatCard } from "@/components/app/stat-card";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
 
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
 export default async function Dashboard() {
+  const supabase = await createClient();
+  const user = await supabase.auth.getUser();
+
+  console.log("user", user);
+
   return (
     <div className="grid grid-rows-12 gap-0 dark gap-y-10 pl-10 pt-8">
       <div className="row-span-4 grid grid-cols-4 items-start gap-x-4 gap-y-6">

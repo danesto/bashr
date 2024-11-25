@@ -1,3 +1,5 @@
 export default function Bashes() {
-  return <div>Create your own bug bash with Bashr!</div>;
+  return (
+    <div className="dark:text-white">Create your own bug bash with bashr!</div>
+  );
 }
