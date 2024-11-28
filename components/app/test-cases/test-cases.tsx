@@ -12,16 +12,19 @@ import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { TestCaseDrawer } from "./test-case-drawer";
 
-type TestCasesProps = {
+export type TestCasesProps = {
   testCases: {
     id: number;
     name: string;
     description: string;
     participants: string[];
+    selectedAssignee?: string;
   }[];
+
+  onAssigneeChange?: (value: string, testCaseId: number) => void;
 };
 
-const TestCases = ({ testCases }: TestCasesProps) => {
+const TestCases = ({ testCases, onAssigneeChange }: TestCasesProps) => {
   const [isTestCaseDrawwerOpen, setIsTestCaseDrawwerOpen] = useState(false);
 
   const handleOpenDrawer = () => {
@@ -30,6 +33,16 @@ const TestCases = ({ testCases }: TestCasesProps) => {
 
   const toggleDrawer = () => {
     setIsTestCaseDrawwerOpen(!isTestCaseDrawwerOpen);
+  };
+
+  const onAssigneeSelect = (value: string) => {
+    const [_, id] = value.split(",");
+
+    console.log("id", id);
+
+    if (onAssigneeChange) {
+      onAssigneeChange(value, parseInt(id));
+    }
   };
 
   return (
@@ -43,6 +56,7 @@ const TestCases = ({ testCases }: TestCasesProps) => {
 
       <CardContent className="flex flex-col gap-2">
         {testCases.map((testCase) => {
+          console.log("selected assignee", testCase.selectedAssignee);
           return (
             <div
               key={testCase.name}
@@ -57,10 +71,12 @@ const TestCases = ({ testCases }: TestCasesProps) => {
                 {testCase.name}
               </Button>
               <Combobox
-                options={[
-                  { label: "Danilo Stojanovic", value: "danilo" },
-                  { label: "Jon Doe", value: "jon doe" },
-                ]}
+                defaultValue={testCase.selectedAssignee}
+                options={testCase.participants.map((participant) => ({
+                  label: participant,
+                  value: `${participant},${testCase.id}`,
+                }))}
+                onSelect={onAssigneeSelect}
               />
             </div>
           );

@@ -1,6 +1,38 @@
-import { TestCases } from "@/components/app/test-cases/test-cases";
+import {
+  getTestCases,
+  onTestCaseUpdate,
+  updateAssigne,
+} from "@/actions/test-cases";
+import {
+  TestCases,
+  TestCasesProps,
+} from "@/components/app/test-cases/test-cases";
+import { createClient } from "@/lib/supabase/server";
 
-export default function BashSlugPage() {
+export default async function BashSlugPage() {
+  const sb = await createClient();
+  const testCasesData = await getTestCases({ bashId: 1 });
+
+  sb.channel("testCases")
+    .on(
+      "postgres_changes",
+      { event: "UPDATE", schema: "public", table: "testCases" },
+      onTestCaseUpdate
+    )
+    .subscribe();
+
+  console.log("test", testCasesData);
+
+  const testCases = testCasesData?.map((testCase: any) => {
+    return {
+      name: testCase?.name,
+      participants: ["danilo", "tanja"],
+      description: testCase?.description,
+      id: testCase?.id,
+      selectedAssignee: testCase?.assignee,
+    };
+  });
+
   return (
     <div className="grid grid-cols-12 gap-0 dark gap-y-8 pl-10 pt-10">
       <div className="col-span-12 flex gap-4 items-center">
@@ -13,26 +45,8 @@ export default function BashSlugPage() {
         {/* <h3 className="col-span-4 text-base font-semibold">test cases</h3> */}
 
         <TestCases
-          testCases={[
-            {
-              name: "Submiting a form",
-              participants: [],
-              description: "In this scenario we are testing form submission.",
-              id: 1,
-            },
-            {
-              name: "Get all names after search",
-              participants: [],
-              id: 2,
-              description: "",
-            },
-            {
-              name: "Some test case no. 3",
-              participants: [],
-              id: 3,
-              description: "",
-            },
-          ]}
+          testCases={testCases as TestCasesProps["testCases"]}
+          onAssigneeChange={updateAssigne}
         />
       </div>
     </div>

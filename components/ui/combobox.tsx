@@ -21,12 +21,18 @@ import {
 
 type ComboboxProps = {
   options: { value: string; label: string }[];
+  defaultValue?: string;
   onSelect?: (value: string) => void;
 };
 
-export function Combobox({ options, onSelect }: ComboboxProps) {
+export function Combobox({
+  options,
+  defaultValue = "",
+  onSelect,
+}: ComboboxProps) {
+  console.log("defa", defaultValue);
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(defaultValue);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
