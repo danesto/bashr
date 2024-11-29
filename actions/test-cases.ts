@@ -11,8 +11,9 @@ const getTestCases = async ({ bashId }: GetTestCasesParams) => {
 
   const { data, error } = await sb
     .from("testCases")
-    .select("*")
-    .eq("bashId", bashId);
+    .select("*, bashes (name, id, participants)")
+    .eq("bashId", bashId)
+    .order("id", { ascending: true });
 
   if (error) {
     console.log("there was an error fetching test cases: ", error);

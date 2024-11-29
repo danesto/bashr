@@ -24,7 +24,7 @@ export default function Bush({ params }: { params: Record<string, string> }) {
         {/* <h3 className="col-span-4 text-base font-semibold">test cases</h3> */}
 
         <TestCases
-          testCases={[
+          initialTestCases={[
             {
               name: "Submiting a form",
               participants: [],

@@ -1,32 +1,18 @@
-import {
-  getTestCases,
-  onTestCaseUpdate,
-  updateAssigne,
-} from "@/actions/test-cases";
+import { getTestCases, updateAssigne } from "@/actions/test-cases";
 import {
   TestCases,
   TestCasesProps,
 } from "@/components/app/test-cases/test-cases";
-import { createClient } from "@/lib/supabase/server";
 
 export default async function BashSlugPage() {
-  const sb = await createClient();
   const testCasesData = await getTestCases({ bashId: 1 });
-
-  sb.channel("testCases")
-    .on(
-      "postgres_changes",
-      { event: "UPDATE", schema: "public", table: "testCases" },
-      onTestCaseUpdate
-    )
-    .subscribe();
 
   console.log("test", testCasesData);
 
   const testCases = testCasesData?.map((testCase: any) => {
     return {
       name: testCase?.name,
-      participants: ["danilo", "tanja"],
+      participants: testCase.bashes.participants,
       description: testCase?.description,
       id: testCase?.id,
       selectedAssignee: testCase?.assignee,
@@ -45,7 +31,7 @@ export default async function BashSlugPage() {
         {/* <h3 className="col-span-4 text-base font-semibold">test cases</h3> */}
 
         <TestCases
-          testCases={testCases as TestCasesProps["testCases"]}
+          initialTestCases={testCases as TestCasesProps["initialTestCases"]}
           onAssigneeChange={updateAssigne}
         />
       </div>

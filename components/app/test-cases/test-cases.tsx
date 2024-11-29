@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TestCaseDrawer } from "./test-case-drawer";
+import { createClient } from "@/lib/supabase/client";
 
 export type TestCasesProps = {
-  testCases: {
+  initialTestCases: {
     id: number;
     name: string;
     description: string;
@@ -24,8 +25,48 @@ export type TestCasesProps = {
   onAssigneeChange?: (value: string, testCaseId: number) => void;
 };
 
-const TestCases = ({ testCases, onAssigneeChange }: TestCasesProps) => {
+const TestCases = ({ initialTestCases, onAssigneeChange }: TestCasesProps) => {
+  const [testCases, setTestCases] = useState(initialTestCases);
   const [isTestCaseDrawwerOpen, setIsTestCaseDrawwerOpen] = useState(false);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime-test-cases")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "testCases",
+        },
+        (payload) => {
+          console.log("ok-live changed", payload);
+          const updatedTestCase = payload.new;
+
+          console.log("pdatedTestCase.assignee", updatedTestCase.assignee);
+
+          setTestCases((testCases) => {
+            return testCases.map((testCase) => {
+              if (testCase.id === updatedTestCase.id) {
+                return {
+                  ...testCase,
+                  selectedAssignee: updatedTestCase.assignee,
+                };
+              }
+
+              return testCase;
+            });
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, onAssigneeChange]);
 
   const handleOpenDrawer = () => {
     setIsTestCaseDrawwerOpen(true);
@@ -36,7 +77,7 @@ const TestCases = ({ testCases, onAssigneeChange }: TestCasesProps) => {
   };
 
   const onAssigneeSelect = (value: string) => {
-    const [_, id] = value.split(",");
+    const [, id] = value.split(",");
 
     console.log("id", id);
 
@@ -48,6 +89,8 @@ const TestCases = ({ testCases, onAssigneeChange }: TestCasesProps) => {
   return (
     <Card>
       <CardHeader>
+        {testCases[0].selectedAssignee}
+        {testCases[1].selectedAssignee}
         <CardTitle>Test Cases</CardTitle>
         <CardDescription>
           These are test scenarios related to the bash. Pick one to test
@@ -57,6 +100,7 @@ const TestCases = ({ testCases, onAssigneeChange }: TestCasesProps) => {
       <CardContent className="flex flex-col gap-2">
         {testCases.map((testCase) => {
           console.log("selected assignee", testCase.selectedAssignee);
+
           return (
             <div
               key={testCase.name}
@@ -71,7 +115,7 @@ const TestCases = ({ testCases, onAssigneeChange }: TestCasesProps) => {
                 {testCase.name}
               </Button>
               <Combobox
-                defaultValue={testCase.selectedAssignee}
+                selected={testCase.selectedAssignee}
                 options={testCase.participants.map((participant) => ({
                   label: participant,
                   value: `${participant},${testCase.id}`,
