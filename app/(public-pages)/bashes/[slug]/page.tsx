@@ -1,4 +1,5 @@
 import { getTestCases, updateAssigne } from "@/actions/test-cases";
+import { CursorPresence } from "@/components/app/cursor-presence/cursor-presence";
 import {
   TestCases,
   TestCasesProps,
@@ -7,12 +8,10 @@ import {
 export default async function BashSlugPage() {
   const testCasesData = await getTestCases({ bashId: 1 });
 
-  console.log("test", testCasesData);
-
-  const testCases = testCasesData?.map((testCase: any) => {
+  const testCases = testCasesData?.map((testCase) => {
     return {
       name: testCase?.name,
-      participants: testCase.bashes.participants,
+      participants: testCase?.bashes?.participants,
       description: testCase?.description,
       id: testCase?.id,
       selectedAssignee: testCase?.assignee,
@@ -27,7 +26,7 @@ export default async function BashSlugPage() {
         </h2>
       </div>
 
-      <div className="col-span-12 grid grid-cols-3 items-baseline gap-x-4 dark:text-stone-100">
+      <div className="col-span-12 grid grid-cols-12 items-baseline gap-x-4 dark:text-stone-100">
         {/* <h3 className="col-span-4 text-base font-semibold">test cases</h3> */}
 
         <TestCases
@@ -35,6 +34,7 @@ export default async function BashSlugPage() {
           onAssigneeChange={updateAssigne}
         />
       </div>
+      <CursorPresence bashId={1} />
     </div>
   );
 }

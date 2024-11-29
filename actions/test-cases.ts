@@ -1,5 +1,6 @@
 "use server";
 
+import { TablesUpdate } from "@/lib/supabase.types";
 import { createClient } from "@/lib/supabase/server";
 
 type GetTestCasesParams = {
@@ -24,7 +25,6 @@ const getTestCases = async ({ bashId }: GetTestCasesParams) => {
 };
 
 const updateAssigne = async (assignee: string, testCaseId: number) => {
-  console.log("edited", assignee);
   const sb = await createClient();
   const { error } = await sb
     .from("testCases")
@@ -39,8 +39,38 @@ const updateAssigne = async (assignee: string, testCaseId: number) => {
   return true;
 };
 
+const updateTestCase = async ({
+  description,
+  id,
+  assignee,
+}: TablesUpdate<"testCases">) => {
+  const sb = await createClient();
+
+  console.log("ID", id);
+
+  if (!id) {
+    console.log("test case id is required");
+    return;
+  }
+
+  const { data, error } = await sb
+    .from("testCases")
+    .update({
+      description,
+      assignee,
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.log("there was an error updating test case: ", error);
+    return;
+  }
+
+  return data;
+};
+
 const onTestCaseUpdate = (payload: unknown) => {
   console.log("test case changeg: ", payload);
 };
 
-export { getTestCases, updateAssigne, onTestCaseUpdate };
+export { getTestCases, updateAssigne, onTestCaseUpdate, updateTestCase };
